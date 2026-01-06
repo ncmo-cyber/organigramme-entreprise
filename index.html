@@ -1,26 +1,18 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <title>Organigramme – Accès privé</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Organigramme de l'entreprise</title>
   <link rel="stylesheet" href="style.css">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <style>
-    body { font-family: Arial, sans-serif; padding: 30px; }
-    input { padding: 10px; width: 100%; margin-bottom: 20px; }
-    .card { border: 1px solid #ddd; padding: 15px; max-width: 600px; }
-  </style>
 </head>
 <body>
+  <div id="main-container">
+    <input type="text" id="search" placeholder="Rechercher un membre, poste ou société">
+    <div id="result"></div>
+  </div>
 
-<h1>Organigramme – Groupe</h1>
-
-<input id="search" placeholder="Rechercher un collaborateur" />
-
-<div id="result"></div>
-
-<link rel="stylesheet" href="style.css">
-<script src="data.js"></script>
-<script src="script.js"></script>
+  <script src="data.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
