@@ -48,6 +48,7 @@ function createFullTree(person) {
   const tree = document.createElement('div');
   tree.classList.add('tree');
 
+  // Supérieurs
   let current = person;
   const hierarchy = [];
   while (true) {
@@ -61,21 +62,27 @@ function createFullTree(person) {
     else break;
   }
   hierarchy.forEach(manager => tree.appendChild(createNode(manager, true)));
+
+  // La personne elle-même
   tree.appendChild(createNode(person));
 
+  // Subordonnés horizontaux
   const appendChildren = (parentNode, parentPerson) => {
     const children = employees.filter(e => {
       if (Array.isArray(e.managerId)) return e.managerId.includes(parentPerson.id) && e.company === parentPerson.company;
       return e.managerId === parentPerson.id && e.company === parentPerson.company;
     });
     if (children.length === 0) return;
+
     const childrenContainer = document.createElement('div');
-    childrenContainer.classList.add('children');
+    childrenContainer.classList.add('children'); // flex horizontal
+
     children.forEach(child => {
       const childNode = createNode(child);
       childrenContainer.appendChild(childNode);
       appendChildren(childNode, child);
     });
+
     parentNode.appendChild(childrenContainer);
   };
   appendChildren(tree, person);
