@@ -1,24 +1,28 @@
+// Groupes prédéfinis
+const companyGroups = {
+  "friends of khadou": ["Khadou France", "Hubtoys", "Heathside"],
+  "cube golem": ["Cube Golem France", "Cube Golem Germany", "Cube Golem Slovenia"]
+};
+
+// Déterminer classe couleur
 function getCompanyClass(person) {
   const company = person.company.toLowerCase();
-  if (company.includes("cube golem")) return "cube-golem";
+  if (company.includes("cube golem france")) return "cube-golem-france";
+  if (company.includes("cube golem germany")) return "cube-golem-germany";
+  if (company.includes("cube golem slovenia")) return "cube-golem-slovenia";
   if (company.includes("khadou")) return "khadou";
   if (company.includes("heathside")) return "heathside";
   if (company.includes("hubtoys")) return "hubtoys";
   return "";
 }
 
+// Créer une carte employé
 function createNode(person, isSuperior=false) {
   const node = document.createElement('div');
   node.classList.add('node');
-
-  // Ajout couleur société
   const companyClass = getCompanyClass(person);
   node.classList.add(companyClass);
-
-  // Si CEO / Partner
   if (!person.managerId) node.classList.add('ceo');
-
-  // Encadré pour supérieurs directs
   if (isSuperior) node.classList.add('superior');
 
   node.innerHTML = `
@@ -28,25 +32,10 @@ function createNode(person, isSuperior=false) {
     ${person.email ? `📧 <a href="mailto:${person.email}">${person.email}</a><br>` : ''}
     ${person.phone ? `📞 ${person.phone}` : ''}
   `;
-
-  // Subordonnés
-  const children = employees.filter(e => {
-    if (Array.isArray(e.managerId)) return e.managerId.includes(person.id);
-    return e.managerId === person.id;
-  });
-
-  if (children.length > 0) {
-    const childrenContainer = document.createElement('div');
-    childrenContainer.classList.add('children');
-    children.forEach(child => {
-      childrenContainer.appendChild(createNode(child));
-    });
-    node.appendChild(childrenContainer);
-  }
-
   return node;
 }
 
+// Arbre hiérarchique complet d'un membre
 function createFullTree(person) {
   const companyBlock = document.createElement('div');
   companyBlock.classList.add('company-block');
@@ -59,31 +48,63 @@ function createFullTree(person) {
   const tree = document.createElement('div');
   tree.classList.add('tree');
 
-  // Supérieurs directs
+  // Supérieurs directs dans la même société
   let current = person;
   const hierarchy = [];
   while (true) {
     let manager = null;
     if (Array.isArray(current.managerId)) {
-      manager = employees.find(e => current.managerId.includes(e.id));
+      manager = employees.find(e => current.managerId.includes(e.id) && e.company === person.company);
     } else if (current.managerId) {
-      manager = employees.find(e => e.id === current.managerId);
+      manager = employees.find(e => e.id === current.managerId && e.company === person.company);
     }
-    if (manager) {
-      hierarchy.unshift(manager);
-      current = manager;
-    } else break;
+    if (manager) { hierarchy.unshift(manager); current = manager; }
+    else break;
   }
+  hierarchy.forEach(manager => tree.appendChild(createNode(manager, true)));
 
-  hierarchy.forEach(manager => {
-    tree.appendChild(createNode(manager, true));
-  });
-
-  // Personne recherchée
+  // La personne
   tree.appendChild(createNode(person));
+
+  // Subordonnés
+  const appendChildren = (parentNode, parentPerson) => {
+    const children = employees.filter(e => {
+      if (Array.isArray(e.managerId)) return e.managerId.includes(parentPerson.id) && e.company === person.company;
+      return e.managerId === parentPerson.id && e.company === person.company;
+    });
+    if (children.length === 0) return;
+    const childrenContainer = document.createElement('div');
+    childrenContainer.classList.add('children');
+    children.forEach(child => {
+      const childNode = createNode(child);
+      childrenContainer.appendChild(childNode);
+      appendChildren(childNode, child);
+    });
+    parentNode.appendChild(childrenContainer);
+  };
+  appendChildren(tree, person);
 
   companyBlock.appendChild(tree);
   return companyBlock;
+}
+
+// Affichage plat (liste) pour postes ou groupes
+function createFlatList(persons, title) {
+  const block = document.createElement('div');
+  block.classList.add('company-block');
+
+  const companyTitle = document.createElement('div');
+  companyTitle.classList.add('company-title');
+  companyTitle.textContent = title;
+  block.appendChild(companyTitle);
+
+  const tree = document.createElement('div');
+  tree.classList.add('tree');
+
+  persons.forEach(person => tree.appendChild(createNode(person)));
+
+  block.appendChild(tree);
+  return block;
 }
 
 // Recherche interactive
@@ -95,14 +116,47 @@ searchInput.addEventListener('input', () => {
   resultContainer.innerHTML = '';
   if (!query) return;
 
-  const person = employees.find(e =>
-    `${e.firstName} ${e.lastName}`.toLowerCase().includes(query)
-  );
-
-  if (!person) {
-    resultContainer.innerHTML = '<p>Aucun résultat</p>';
+  // 1️⃣ Recherche "all"
+  if (query === 'all') {
+    const companies = [...new Set(employees.map(e => e.company))];
+    companies.forEach(companyName => {
+      const members = employees.filter(e => e.company === companyName);
+      resultContainer.appendChild(createFlatList(members, companyName));
+    });
     return;
   }
 
-  resultContainer.appendChild(createFullTree(person));
+  // 2️⃣ Recherche par groupe
+  if (companyGroups[query]) {
+    const groupCompanies = companyGroups[query];
+    groupCompanies.forEach(companyName => {
+      const members = employees.filter(e => e.company === companyName);
+      resultContainer.appendChild(createFlatList(members, companyName));
+    });
+    return;
+  }
+
+  // 3️⃣ Recherche par nom/prénom
+  let person = employees.find(e => `${e.firstName} ${e.lastName}`.toLowerCase().includes(query));
+  if (person) {
+    resultContainer.appendChild(createFullTree(person));
+    return;
+  }
+
+  // 4️⃣ Recherche par nom d'organisation
+  const orgMatches = employees.filter(e => e.company.toLowerCase().includes(query));
+  if (orgMatches.length > 0) {
+    const companyName = orgMatches[0].company;
+    resultContainer.appendChild(createFlatList(orgMatches, `Membres de ${companyName}`));
+    return;
+  }
+
+  // 5️⃣ Recherche par poste
+  const roleMatches = employees.filter(e => e.role && e.role.toLowerCase().includes(query));
+  if (roleMatches.length > 0) {
+    resultContainer.appendChild(createFlatList(roleMatches, `Poste(s): "${query}"`));
+    return;
+  }
+
+  resultContainer.innerHTML = '<p>Aucun résultat</p>';
 });
