@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Organigramme de l'entreprise</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Organigramme de l'entreprise</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div id="main-container">
-    <input type="text" id="search" placeholder="Rechercher un membre, poste ou société">
-    <div id="result"></div>
+  <div class="container">
+    <h1>Organigramme de l'entreprise</h1>
+    <input type="text" id="searchInput" placeholder="Rechercher nom, poste, société...">
+    <div id="orgChart" class="org-chart"></div>
   </div>
 
   <script src="data.js"></script>
