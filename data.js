@@ -13,7 +13,7 @@ const employees = [
   {id:12, firstName:"Alistair", lastName:"RINGLAND", role:"Logistic Director", company:"Heathside", managerId:11, email:"alistair@heathside.biz", phone:"+44 777 190 00240"},
   {id:13, firstName:"Nic", lastName:"ALDRIDGE", role:"Head of Khadou Global", company:"Heathside", managerId:11, email:"nic@khadou.com", phone:"+44 794 782 5133"},
   {id:14, firstName:"Sam", lastName:"MYERS", role:"Head of Product Management", company:"Heathside", managerId:11, email:"sam@heathside.biz", phone:"+44 753 491 4120"},
-  {id:15, firstName:"Reinhard", lastName:"SIGEL", role:"General Manager", company:"Cube Golem Germany", managerId:10, email:"reinhard.sigel@funtainment.de", phone:"0049 89 614219 32"},
+  {id:15, firstName:"Reinhard", lastName:"SIGEL", role:"CO CEO", company:"Cube Golem Germany", managerId:10, email:"reinhard.sigel@funtainment.de", phone:"0049 89 614219 32"},
   {id:16, firstName:"Jurgen", lastName:"BROY", role:"CO-CEO", company:"Cube Golem Germany", managerId:10, email:"", phone:""},
   {id:17, firstName:"Peter", lastName:"MÜLLER", role:"Head of Logistics", company:"Cube Golem Germany", managerId:15, email:"peter.mueller@funtainment.de", phone:"0049 89 614219 22"},
   {id:18, firstName:"", lastName:"", role:"Head of Sales", company:"Cube Golem Germany", managerId:15, email:"", phone:""},
@@ -23,6 +23,6 @@ const employees = [
   {id:22, firstName:"José", lastName:"MARTINEZ", role:"CO-CEO", company:"Hubtoys", managerId:null, email:"j.martinez@hubtoys.fr", phone:""},
   {id:23, firstName:"Thomas", lastName:"TURBE", role:"", company:"Hubtoys", managerId:21, email:"t.turbe@hubtoys.fr", phone:""},
   {id:24, firstName:"Eve", lastName:"SOULLIER", role:"Administrative Assistant", company:"Hubtoys", managerId:21, email:"support@hubtoys.fr", phone:"+33 6 89 93 33 69"},
-  {id:25, firstName:"Nik", lastName:"KROSELJ", role:"CEO", company:"Cube Golem Slovenia", managerId:10, email:"n.kroselj@cubegolem.si", phone:"+38 6 51 24 04 40"},
+  {id:25, firstName:"Nik", lastName:"KROSELJ", role:"CEO", company:"Cube Golem Slovenia", managerId:null, email:"n.kroselj@cubegolem.si", phone:"+38 6 51 24 04 40"},
   {id:26, firstName:"Adja", lastName:"SOSKO", role:"Warehouse Manager", company:"Cube Golem Slovenia", managerId:25, email:"a.sosko@cubegolem.si", phone:"+38 6 40 75 25 17"}
 ];
