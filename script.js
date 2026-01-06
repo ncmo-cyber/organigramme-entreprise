@@ -1,64 +1,86 @@
-const searchInput = document.getElementById("search");
-const resultContainer = document.getElementById("result");
+function createNode(person) {
+  const node = document.createElement('div');
+  node.classList.add('node');
+  node.innerHTML = `
+    <strong>${person.firstName} ${person.lastName}</strong><br>
+    <em>${person.role || 'Poste non renseigné'}</em><br>
+    🏢 ${person.company}<br>
+    ${person.email ? `📧 <a href="mailto:${person.email}">${person.email}</a><br>` : ''}
+    ${person.phone ? `📞 ${person.phone}` : ''}
+  `;
 
-searchInput.addEventListener("input", () => {
-  const query = searchInput.value.toLowerCase().trim();
-
-  if (query.length < 2) {
-    resultContainer.innerHTML = "";
-    return;
-  }
-
-  const person = employees.find(emp =>
-    `${emp.firstName} ${emp.lastName}`.toLowerCase().includes(query)
-  );
-
-  if (!person) {
-    resultContainer.innerHTML = "<p>Aucun résultat</p>";
-    return;
-  }
-
-  // Supérieur(s)
-  let managers = [];
-  if (Array.isArray(person.managerId)) {
-    managers = employees.filter(e => person.managerId.includes(e.id));
-  } else if (person.managerId !== null) {
-    const manager = employees.find(e => e.id === person.managerId);
-    if (manager) managers.push(manager);
-  }
-
-  // Subordonnés
-  const subordinates = employees.filter(e => {
-    if (Array.isArray(e.managerId)) {
-      return e.managerId.includes(person.id);
-    }
+  const children = employees.filter(e => {
+    if (Array.isArray(e.managerId)) return e.managerId.includes(person.id);
     return e.managerId === person.id;
   });
 
-  resultContainer.innerHTML = `
-    <div class="card">
-      <h2>${person.firstName} ${person.lastName}</h2>
-      <p><strong>${person.role || "Poste non renseigné"}</strong></p>
-      <p>🏢 ${person.company}</p>
+  if (children.length > 0) {
+    const childrenContainer = document.createElement('div');
+    childrenContainer.classList.add('children');
+    children.forEach(child => {
+      childrenContainer.appendChild(createNode(child));
+    });
+    node.appendChild(childrenContainer);
+  }
 
-      ${person.email ? `<p>📧 <a href="mailto:${person.email}">${person.email}</a></p>` : ""}
-      ${person.phone ? `<p>📞 ${person.phone}</p>` : ""}
+  return node;
+}
 
-      ${
-        managers.length
-          ? `<hr><p><strong>Supérieur(s) hiérarchique(s)</strong><br>
-              ${managers.map(m => `${m.firstName} ${m.lastName} – ${m.role}`).join("<br>")}
-            </p>`
-          : ""
-      }
+function createFullTree(person) {
+  const companyBlock = document.createElement('div');
+  companyBlock.classList.add('company-block');
 
-      ${
-        subordinates.length
-          ? `<hr><p><strong>Supervise</strong><br>
-              ${subordinates.map(s => `${s.firstName} ${s.lastName} – ${s.role}`).join("<br>")}
-            </p>`
-          : ""
-      }
-    </div>
-  `;
+  const companyTitle = document.createElement('div');
+  companyTitle.classList.add('company-title');
+  companyTitle.textContent = person.company;
+  companyBlock.appendChild(companyTitle);
+
+  const tree = document.createElement('div');
+  tree.classList.add('tree');
+
+  // Ajouter les supérieurs directs (tous niveaux)
+  let current = person;
+  const hierarchy = [];
+  while (true) {
+    let manager = null;
+    if (Array.isArray(current.managerId)) {
+      manager = employees.find(e => current.managerId.includes(e.id));
+    } else if (current.managerId) {
+      manager = employees.find(e => e.id === current.managerId);
+    }
+    if (manager) {
+      hierarchy.unshift(manager);
+      current = manager;
+    } else break;
+  }
+
+  hierarchy.forEach(manager => {
+    tree.appendChild(createNode(manager));
+  });
+
+  // Ajouter la personne recherchée et ses subordonnés
+  tree.appendChild(createNode(person));
+
+  companyBlock.appendChild(tree);
+  return companyBlock;
+}
+
+const searchInput = document.getElementById('search');
+const resultContainer = document.getElementById('result');
+
+searchInput.addEventListener('input', () => {
+  const query = searchInput.value.toLowerCase().trim();
+  resultContainer.innerHTML = '';
+  if (!query) return;
+
+  const person = employees.find(e =>
+    `${e.firstName} ${e.lastName}`.toLowerCase().includes(query)
+  );
+
+  if (!person) {
+    resultContainer.innerHTML = '<p>Aucun résultat</p>';
+    return;
+  }
+
+  resultContainer.appendChild(createFullTree(person));
 });
