@@ -1,38 +1,70 @@
+/* Corps centré */
 body {
   font-family: Arial, sans-serif;
   background-color: #f9f9f9;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0;
+  padding: 20px;
 }
 
+/* Conteneur principal */
+#main-container {
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Barre de recherche */
 #search {
   width: 300px;
-  padding: 8px;
-  margin-bottom: 20px;
+  padding: 10px 12px;
+  margin-bottom: 30px;
   font-size: 16px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  box-shadow: 1px 1px 4px rgba(0,0,0,0.1);
+  text-align: center;
 }
 
+/* Résultats */
+#result {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Carte hiérarchique */
 .company-block {
   margin-bottom: 40px;
+  width: 100%;
 }
 
 .company-title {
   font-size: 20px;
   font-weight: bold;
   margin-bottom: 10px;
+  text-align: center;
 }
 
-/* Carte hiérarchique */
 .tree {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
 }
 
 .children {
   margin-left: 40px;
   border-left: 1px dashed #ccc;
   padding-left: 15px;
+  align-items: flex-start;
 }
 
+/* Carte individuelle */
 .node {
   border: 1px solid #ccc;
   border-radius: 6px;
@@ -40,14 +72,19 @@ body {
   margin: 5px 0;
   background-color: #fff;
   box-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+  text-align: center;
 }
 
-/* Supérieur direct */
 .node.superior {
   border: 2px solid #666;
 }
 
-/* Couleurs par société/filiale avec dégradés hiérarchiques */
+.node.ceo {
+  font-weight: bold;
+  border-width: 2px;
+}
+
+/* Couleurs filiales avec dégradés hiérarchiques */
 .cube-golem-france { background-color: #2f7a2f; color: white; }
 .cube-golem-france .node:not(.ceo) { background-color: #70b070; color: black; }
 
@@ -65,8 +102,3 @@ body {
 
 .hubtoys { background-color: #ff9900; color: white; }
 .hubtoys .node:not(.ceo) { background-color: #ffc966; color: black; }
-
-.node.ceo {
-  font-weight: bold;
-  border-width: 2px;
-}
