@@ -1,6 +1,7 @@
 function createNode(person) {
   const node = document.createElement('div');
   node.classList.add('node');
+
   node.innerHTML = `
     <strong>${person.firstName} ${person.lastName}</strong><br>
     <em>${person.role || 'Poste non renseigné'}</em><br>
@@ -9,6 +10,7 @@ function createNode(person) {
     ${person.phone ? `📞 ${person.phone}` : ''}
   `;
 
+  // Trouver les subordonnés
   const children = employees.filter(e => {
     if (Array.isArray(e.managerId)) return e.managerId.includes(person.id);
     return e.managerId === person.id;
@@ -38,7 +40,7 @@ function createFullTree(person) {
   const tree = document.createElement('div');
   tree.classList.add('tree');
 
-  // Ajouter les supérieurs directs (tous niveaux)
+  // Ajouter tous les supérieurs directs (hiérarchie complète)
   let current = person;
   const hierarchy = [];
   while (true) {
@@ -49,7 +51,7 @@ function createFullTree(person) {
       manager = employees.find(e => e.id === current.managerId);
     }
     if (manager) {
-      hierarchy.unshift(manager);
+      hierarchy.unshift(manager); // Ajoute au début
       current = manager;
     } else break;
   }
@@ -65,6 +67,7 @@ function createFullTree(person) {
   return companyBlock;
 }
 
+// Recherche et affichage interactif
 const searchInput = document.getElementById('search');
 const resultContainer = document.getElementById('result');
 
