@@ -43,8 +43,10 @@ input#search {
   text-align: center;
   position: relative;
   min-width: 180px;
+  transition: all 0.3s;
 }
 
+/* Lignes verticales */
 .node::before {
   content: '';
   position: absolute;
@@ -71,6 +73,23 @@ input#search {
   font-weight: bold;
   margin-bottom: 12px;
   font-size: 18px;
+}
+
+/* Couleurs discrètes pour les sociétés avec dégradés */
+.cube-golem { background-color: #a8d5ba; }       /* clair */
+.khadou { background-color: #f5c3d1; }           /* clair */
+.heathside { background-color: #c9b4f4; }       /* clair */
+.hubtoys { background-color: #ffd9b3; }          /* clair */
+
+/* CEO / partenaires un peu plus foncé */
+.cube-golem.ceo { background-color: #73b789; }
+.khadou.ceo { background-color: #f093b2; }
+.heathside.ceo { background-color: #a38ef2; }
+.hubtoys.ceo { background-color: #ffb347; }
+
+/* Supérieurs directs encadrés */
+.node.superior {
+  border: 2px solid #555;
 }
 
 /* Impression */
