@@ -1,105 +1,84 @@
-/* Corps centré */
 body {
   font-family: Arial, sans-serif;
   background-color: #f9f9f9;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
   padding: 20px;
 }
 
-/* Conteneur principal */
-#main-container {
-  width: 100%;
-  max-width: 1400px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+h1 {
+  margin-bottom: 20px;
 }
 
-/* Barre de recherche */
-#search {
-  width: 300px;
-  padding: 10px 12px;
+#searchInput {
+  width: 80%;
+  max-width: 500px;
+  padding: 10px;
   margin-bottom: 30px;
   font-size: 16px;
-  border-radius: 6px;
+  border-radius: 5px;
   border: 1px solid #ccc;
-  box-shadow: 1px 1px 4px rgba(0,0,0,0.1);
-  text-align: center;
 }
 
-/* Résultats */
-#result {
-  width: 100%;
+.org-chart {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-/* Carte hiérarchique */
-.company-block {
-  margin-bottom: 40px;
-  width: 100%;
-}
-
-.company-title {
-  font-size: 20px;
-  font-weight: bold;
-  margin-bottom: 10px;
+/* Carte employé */
+.employee-card {
+  border-radius: 8px;
+  padding: 10px;
+  margin: 5px;
+  min-width: 150px;
   text-align: center;
+  box-shadow: 0px 2px 6px rgba(0,0,0,0.15);
+  font-size: 14px;
+  color: #333;
 }
 
-/* Arbre hiérarchique horizontal */
-.tree {
+.employee-card .name {
+  font-weight: bold;
+  margin-bottom: 3px;
+}
+
+.employee-card .role {
+  font-style: italic;
+  margin-bottom: 3px;
+}
+
+.employee-card .contact {
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+/* Ligne horizontale pour subordonnés */
+.subordinates {
   display: flex;
-  flex-direction: column; /* niveaux empilés verticalement */
-  align-items: center;
-}
-
-.children {
-  display: flex;             /* subordonnés sur la même ligne */
   justify-content: center;
-  margin-top: 20px;          /* espace entre niveaux */
-  gap: 20px;                 /* espace entre subordonnés */
+  margin-top: 10px;
 }
 
-/* Carte individuelle */
-.node {
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  padding: 8px 12px;
-  margin: 5px 0;
-  background-color: #fff;
-  box-shadow: 1px 1px 3px rgba(0,0,0,0.1);
-  text-align: center;
+/* Couleurs discrètes par société */
+.cube-golem { background-color: #b6e2c5; }
+.cube-golem-2 { background-color: #d4f1d6; }
+.khadou { background-color: #f9d0e0; }
+.khadou-2 { background-color: #fde3f0; }
+.heathside { background-color: #d6c6f0; }
+.heathside-2 { background-color: #e8ddf8; }
+.hubtoys { background-color: #ffd8b6; }
+.hubtoys-2 { background-color: #ffe5cc; }
+
+/* Centrer CEO lors d'une recherche globale */
+.ceo-row {
+  display: flex;
+  justify-content: center;
 }
 
-.node.superior {
-  border: 2px solid #666;
-}
-
-.node.ceo {
-  font-weight: bold;
-  border-width: 2px;
-}
-
-/* Couleurs filiales avec dégradés hiérarchiques */
-.cube-golem-france { background-color: #2f7a2f; color: white; }
-.cube-golem-france .node:not(.ceo) { background-color: #70b070; color: black; }
-
-.cube-golem-germany { background-color: #276627; color: white; }
-.cube-golem-germany .node:not(.ceo) { background-color: #8cc68c; color: black; }
-
-.cube-golem-slovenia { background-color: #2b6e2b; color: white; }
-.cube-golem-slovenia .node:not(.ceo) { background-color: #80c480; color: black; }
-
-.khadou { background-color: #b366b3; color: white; }
-.khadou .node:not(.ceo) { background-color: #e0a0e0; color: black; }
-
-.heathside { background-color: #663399; color: white; }
-.heathside .node:not(.ceo) { background-color: #b399e6; color: black; }
-
-.hubtoys { background-color: #ff9900; color: white; }
-.hubtoys .node:not(.ceo) { background-color: #ffc966; color: black; }
