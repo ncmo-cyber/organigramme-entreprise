@@ -1,6 +1,25 @@
-function createNode(person) {
+function getCompanyClass(person) {
+  const company = person.company.toLowerCase();
+  if (company.includes("cube golem")) return "cube-golem";
+  if (company.includes("khadou")) return "khadou";
+  if (company.includes("heathside")) return "heathside";
+  if (company.includes("hubtoys")) return "hubtoys";
+  return "";
+}
+
+function createNode(person, isSuperior=false) {
   const node = document.createElement('div');
   node.classList.add('node');
+
+  // Ajout couleur société
+  const companyClass = getCompanyClass(person);
+  node.classList.add(companyClass);
+
+  // Si CEO / Partner
+  if (!person.managerId) node.classList.add('ceo');
+
+  // Encadré pour supérieurs directs
+  if (isSuperior) node.classList.add('superior');
 
   node.innerHTML = `
     <strong>${person.firstName} ${person.lastName}</strong><br>
@@ -10,7 +29,7 @@ function createNode(person) {
     ${person.phone ? `📞 ${person.phone}` : ''}
   `;
 
-  // Trouver les subordonnés
+  // Subordonnés
   const children = employees.filter(e => {
     if (Array.isArray(e.managerId)) return e.managerId.includes(person.id);
     return e.managerId === person.id;
@@ -40,7 +59,7 @@ function createFullTree(person) {
   const tree = document.createElement('div');
   tree.classList.add('tree');
 
-  // Ajouter tous les supérieurs directs (hiérarchie complète)
+  // Supérieurs directs
   let current = person;
   const hierarchy = [];
   while (true) {
@@ -51,23 +70,23 @@ function createFullTree(person) {
       manager = employees.find(e => e.id === current.managerId);
     }
     if (manager) {
-      hierarchy.unshift(manager); // Ajoute au début
+      hierarchy.unshift(manager);
       current = manager;
     } else break;
   }
 
   hierarchy.forEach(manager => {
-    tree.appendChild(createNode(manager));
+    tree.appendChild(createNode(manager, true));
   });
 
-  // Ajouter la personne recherchée et ses subordonnés
+  // Personne recherchée
   tree.appendChild(createNode(person));
 
   companyBlock.appendChild(tree);
   return companyBlock;
 }
 
-// Recherche et affichage interactif
+// Recherche interactive
 const searchInput = document.getElementById('search');
 const resultContainer = document.getElementById('result');
 
