@@ -4,7 +4,7 @@ const companyGroups = {
   "cube golem": ["Cube Golem France", "Cube Golem Germany", "Cube Golem Slovenia"]
 };
 
-// Déterminer classe couleur
+// Classe couleur par société
 function getCompanyClass(person) {
   const company = person.company.toLowerCase();
   if (company.includes("cube golem france")) return "cube-golem-france";
@@ -16,7 +16,7 @@ function getCompanyClass(person) {
   return "";
 }
 
-// Créer une carte employé
+// Crée une carte employé
 function createNode(person, isSuperior=false) {
   const node = document.createElement('div');
   node.classList.add('node');
@@ -35,7 +35,7 @@ function createNode(person, isSuperior=false) {
   return node;
 }
 
-// Arbre hiérarchique complet d'un membre
+// Arbre hiérarchique complet
 function createFullTree(person) {
   const companyBlock = document.createElement('div');
   companyBlock.classList.add('company-block');
@@ -48,7 +48,6 @@ function createFullTree(person) {
   const tree = document.createElement('div');
   tree.classList.add('tree');
 
-  // Supérieurs directs dans la même société
   let current = person;
   const hierarchy = [];
   while (true) {
@@ -62,15 +61,12 @@ function createFullTree(person) {
     else break;
   }
   hierarchy.forEach(manager => tree.appendChild(createNode(manager, true)));
-
-  // La personne
   tree.appendChild(createNode(person));
 
-  // Subordonnés
   const appendChildren = (parentNode, parentPerson) => {
     const children = employees.filter(e => {
-      if (Array.isArray(e.managerId)) return e.managerId.includes(parentPerson.id) && e.company === person.company;
-      return e.managerId === parentPerson.id && e.company === person.company;
+      if (Array.isArray(e.managerId)) return e.managerId.includes(parentPerson.id) && e.company === parentPerson.company;
+      return e.managerId === parentPerson.id && e.company === parentPerson.company;
     });
     if (children.length === 0) return;
     const childrenContainer = document.createElement('div');
@@ -88,7 +84,7 @@ function createFullTree(person) {
   return companyBlock;
 }
 
-// Affichage plat (liste) pour postes ou groupes
+// Affichage plat (liste)
 function createFlatList(persons, title) {
   const block = document.createElement('div');
   block.classList.add('company-block');
@@ -143,7 +139,7 @@ searchInput.addEventListener('input', () => {
     return;
   }
 
-  // 4️⃣ Recherche par nom d'organisation
+  // 4️⃣ Recherche par société
   const orgMatches = employees.filter(e => e.company.toLowerCase().includes(query));
   if (orgMatches.length > 0) {
     const companyName = orgMatches[0].company;
